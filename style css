@@ -1,0 +1,6 @@
+body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; }
+nav { background: #2e7d32; padding: 1em; display: flex; justify-content: space-around; }
+nav a { color: white; text-decoration: none; font-weight: bold; }
+.container { padding: 2em; }
+canvas { margin: 2em auto; display: block; max-width: 700px; }
+.kpi { background: white; padding: 1em; margin: 1em; border-radius: 8px; text-align: center; }
