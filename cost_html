@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cost Analysis</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="charts.js"></script>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="sales.html">Sales Analysis</a>
+    <a href="profit.html">Profit Analysis</a>
+    <a href="cost.html">Cost Analysis</a>
+  </nav>
+
+  <div class="container animate__animated animate__fadeIn">
+    <h2>Cost Analysis Dashboard</h2>
+    <canvas id="costBreakdown"></canvas>
+    <canvas id="costVsRevenue"></canvas>
+    <table class="animate__animated animate__fadeInUp">
+      <tr><th>Cost Driver</th><th>Amount ($)</th></tr>
+      <tr><td>Raw Materials</td><td>30,000</td></tr>
+      <tr><td>Logistics</td><td>15,000</td></tr>
+      <tr><td>Marketing</td><td>10,000</td></tr>
+    </table>
+  </div>
+
+  <script>
+    createPieChart(document.getElementById('costBreakdown'),
+      ['Raw Materials','Logistics','Marketing'],
+      [30000,15000,10000],
+      ['#ff7043','#ffa726','#ffcc80']);
+
+    createLineChart(document.getElementById('costVsRevenue'),
+      ['Jan','Feb','Mar','Apr','May','Jun'],
+      [20000,22000,25000,27000,26000,28000],
+      'Costs ($)', '#ef5350');
+  </script>
+</body>
+</html>
