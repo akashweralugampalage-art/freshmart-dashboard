@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sales Analysis</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="charts.js"></script>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="sales.html">Sales Analysis</a>
+    <a href="profit.html">Profit Analysis</a>
+    <a href="cost.html">Cost Analysis</a>
+  </nav>
+
+  <div class="container animate__animated animate__fadeIn">
+    <h2>Sales Analysis Dashboard</h2>
+    <canvas id="salesTrend"></canvas>
+    <canvas id="categorySales"></canvas>
+    <canvas id="regionSales"></canvas>
+  </div>
+
+  <script>
+    createLineChart(document.getElementById('salesTrend'),
+      ['Jan','Feb','Mar','Apr','May','Jun'],
+      [12000,15000,18000,22000,20000,25000],
+      'Monthly Sales ($)', '#2e7d32');
+
+    createBarChart(document.getElementById('categorySales'),
+      ['Produce','Beverages','Packaged'],
+      [50000,30000,20000],
+      'Category Sales ($)', '#66bb6a');
+
+    createPieChart(document.getElementById('regionSales'),
+      ['North','South','East','West'],
+      [40,25,20,15],
+      ['#81c784','#4caf50','#388e3c','#1b5e20']);
+  </script>
+</body>
+</html>
