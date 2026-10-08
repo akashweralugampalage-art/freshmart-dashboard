@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FreshMart Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="sales.html">Sales Analysis</a>
+    <a href="profit.html">Profit Analysis</a>
+    <a href="cost.html">Cost Analysis</a>
+  </nav>
+
+  <div class="container animate__animated animate__fadeIn">
+    <h1 style="color:#2e7d32;">Welcome to FreshMart</h1>
+    <p>Same-Day Delivery | Fresh Produce | Best Deals</p>
+    <img src="banner.png" alt="FreshMart Banner" style="width:100%; border-radius:10px;">
+  </div>
+</body>
+</html>
