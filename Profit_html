@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profit Analysis</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="charts.js"></script>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="sales.html">Sales Analysis</a>
+    <a href="profit.html">Profit Analysis</a>
+    <a href="cost.html">Cost Analysis</a>
+  </nav>
+
+  <div class="container animate__animated animate__fadeIn">
+    <h2>Profit Analysis Dashboard</h2>
+    <div class="kpi animate__animated animate__bounceIn">Profit Margin: 18%</div>
+    <div class="kpi animate__animated animate__bounceIn">ROI: 12%</div>
+    <canvas id="profitTrend"></canvas>
+    <canvas id="grossNetProfit"></canvas>
+  </div>
+
+  <script>
+    createLineChart(document.getElementById('profitTrend'),
+      ['Jan','Feb','Mar','Apr','May','Jun'],
+      [2000,2500,3000,4000,3500,4500],
+      'Monthly Profit ($)', '#388e3c');
+
+    createBarChart(document.getElementById('grossNetProfit'),
+      ['Jan','Feb','Mar','Apr','May','Jun'],
+      [5000,6000,7000,8000,7500,9000],
+      'Gross Profit ($)', '#81c784');
+  </script>
+</body>
+</html>
