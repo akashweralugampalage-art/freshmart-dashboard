@@ -1,42 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Sales Analysis</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="charts.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Analysis | FreshMart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--ink:#10281f;--forest:#14573a;--deep:#0c3b29;--lime:#a6ee6b;--mint:#dff3e3;--side:#e9f4ec;--paper:#f5f7f2;--white:#fff;--muted:#5d7167;--line:#dfe7e0;
+ --display:'Fraunces',Georgia,serif;--body:'Figtree',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);padding:14px}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+
+.app{display:grid;grid-template-columns:220px minmax(0,1fr) 320px;max-width:1440px;margin:0 auto;background:var(--white);border-radius:28px;overflow:hidden;box-shadow:0 0 0 1px var(--line)}
+
+/* sidebar */
+aside.side{background:var(--side);padding:24px 16px;display:flex;flex-direction:column;gap:22px}
+.logo{font-family:var(--display);font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-align:center}
+.me{text-align:center;font-size:.85rem;color:var(--muted)}
+.me .av{width:64px;height:64px;border-radius:50%;margin:0 auto 8px;display:grid;place-items:center;font-size:2rem;background:var(--lime);box-shadow:0 0 0 4px #fff}
+.me b{display:block;color:var(--ink);font-size:1rem}
+.side nav{display:flex;flex-direction:column;gap:4px}
+.side nav a{display:flex;gap:10px;align-items:center;padding:11px 14px;border-radius:14px;font-weight:600;font-size:.92rem;transition:background .2s,transform .2s}
+.side nav a:hover{background:#fff;transform:translateX(3px)}
+.side nav a.on{background:var(--forest);color:#fff}
+.side .back{margin-top:auto;color:var(--muted);font-size:.88rem;padding:8px 14px}
+
+/* main */
+main{padding:24px;background:var(--paper);min-width:0}
+.bar{display:flex;gap:12px;align-items:center;margin-bottom:20px}
+.search{flex:1;max-width:340px;display:flex;gap:8px;align-items:center;background:#fff;border-radius:99px;padding:9px 16px;box-shadow:0 0 0 1px var(--line)}
+.search input{border:0;outline:0;background:none;width:100%}
+.bar .tag{margin-left:auto;background:#fff;border-radius:99px;padding:9px 16px;font-weight:600;font-size:.88rem;box-shadow:0 0 0 1px var(--line)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.8rem,3.5vw,2.4rem);letter-spacing:-.02em}
+.sub{color:var(--muted);margin:2px 0 16px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.chip{padding:8px 18px;border-radius:99px;background:#fff;font-weight:600;font-size:.9rem;box-shadow:0 0 0 1px var(--line);transition:background .2s,color .2s,transform .15s}
+.chip:hover{background:var(--mint)}.chip:active{transform:scale(.95)}
+.chip.on{background:var(--forest);color:#fff;box-shadow:none}
+
+.insight{background:linear-gradient(135deg,#1d6b45,var(--deep));color:#fff;border-radius:22px;padding:20px 24px;margin-bottom:18px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.insight strong{font-family:var(--display);font-weight:800;font-size:clamp(1.5rem,3vw,2.2rem);color:var(--lime);letter-spacing:-.02em}
+.insight span{opacity:.85;max-width:320px;font-size:.95rem}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:18px}
+.kpi{background:#fff;border-radius:20px;padding:14px 16px;box-shadow:0 0 0 1px var(--line);transition:transform .25s,box-shadow .25s}
+.kpi:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(20,87,58,.14)}
+.kpi small{color:var(--muted);font-size:.83rem}
+.kpi strong{display:block;font-family:var(--display);font-size:1.6rem;margin-top:2px}
+
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{background:#fff;border-radius:22px;padding:16px 18px;box-shadow:0 0 0 1px var(--line)}
+.card.wide{grid-column:1/-1}
+.card h2{font-size:1rem;margin-bottom:2px}
+.card p{font-size:.82rem;color:var(--muted);margin-bottom:10px}
+.cv{position:relative;height:250px}.card.wide .cv{height:280px}
+
+/* detail panel */
+aside.detail{padding:24px 22px;background:#fff;border-left:1px solid var(--line);display:flex;flex-direction:column;gap:14px}
+.hero{border-radius:20px;background:var(--mint);padding:20px;text-align:center}
+.hero .m{font-family:var(--display);font-weight:800;font-size:2.4rem;color:var(--forest);line-height:1}
+.hero .amt{font-family:var(--display);font-weight:800;font-size:2rem;margin-top:6px}
+.delta{display:inline-block;margin-top:8px;padding:4px 12px;border-radius:99px;background:#fff;font-weight:700;font-size:.82rem}
+.delta.up{color:#1e8a4f}.delta.down{color:#c0392b}
+.detail h3{font-size:.95rem;margin-top:4px}
+.row{display:grid;grid-template-columns:78px 1fr 62px;gap:8px;align-items:center;font-size:.85rem;margin-top:8px}
+.row .t{height:8px;background:var(--side);border-radius:99px;overflow:hidden}
+.row .t i{display:block;height:100%;background:var(--forest);border-radius:99px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.row b{text-align:right}
+.go{margin-top:auto;display:block;text-align:center;background:var(--deep);color:#fff;border-radius:99px;padding:12px;font-weight:700;transition:background .2s}
+.go:hover{background:#000}
+.flash{animation:flash .45s}
+@keyframes flash{from{opacity:.2;transform:translateY(6px)}}
+
+@media (max-width:1150px){.app{grid-template-columns:200px minmax(0,1fr)}aside.detail{grid-column:1/-1;border-left:0;border-top:1px solid var(--line)}}
+@media (max-width:760px){
+ .app{grid-template-columns:1fr}
+ aside.side{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:14px}
+ .me,.side .back{display:none}.side nav{flex-direction:row;flex-wrap:wrap}.side nav a{padding:8px 12px}
+ .grid{grid-template-columns:1fr}.bar .tag{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition:none!important}}
+</style>
 </head>
 <body>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="sales.html">Sales Analysis</a>
-    <a href="profit.html">Profit Analysis</a>
-    <a href="cost.html">Cost Analysis</a>
-  </nav>
+<div class="app">
 
-  <div class="container animate__animated animate__fadeIn">
-    <h2>Sales Analysis Dashboard</h2>
-    <canvas id="salesTrend"></canvas>
-    <canvas id="categorySales"></canvas>
-    <canvas id="regionSales"></canvas>
-  </div>
+  <aside class="side">
+    <a class="logo" href="index.html">FreshMart</a>
+    <div class="me"><div class="av">🥬</div>Welcome back!<b>Hi, FreshMart team</b></div>
+    <nav>
+      <a href="index.html">🏠 Home</a>
+      <a href="sales.html" class="on">📈 Sales Analysis</a>
+      <a href="profit.html">💰 Profit Analysis</a>
+      <a href="cost.html">🧾 Cost Analysis</a>
+    </nav>
+    <a class="back" href="index.html">← Back to overview</a>
+  </aside>
 
-  <script>
-    createLineChart(document.getElementById('salesTrend'),
-      ['Jan','Feb','Mar','Apr','May','Jun'],
-      [12000,15000,18000,22000,20000,25000],
-      'Monthly Sales ($)', '#2e7d32');
+  <main>
+    <div class="bar">
+      <label class="search">🔍 <input id="q" type="search" placeholder="Search a month or category..." aria-label="Search a month or category"></label>
+      <span class="tag">January to June</span>
+    </div>
 
-    createBarChart(document.getElementById('categorySales'),
-      ['Produce','Beverages','Packaged'],
-      [50000,30000,20000],
-      'Category Sales ($)', '#66bb6a');
+    <h1>Sales Analysis</h1>
+    <p class="sub">Click a month on the trend line or a category bar to see the details.</p>
 
-    createPieChart(document.getElementById('regionSales'),
-      ['North','South','East','West'],
-      [40,25,20,15],
-      ['#81c784','#4caf50','#388e3c','#1b5e20']);
-  </script>
+    <div class="chips" id="chips" role="group" aria-label="Category filter"></div>
+
+    <div class="insight">
+      <strong id="insHead">+108% since January</strong>
+      <span id="insText">Monthly sales rose from $12,000 to $25,000.</span>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="grid">
+      <div class="card wide"><h2>Monthly Sales</h2><p id="trendNote">All categories</p><div class="cv"><canvas id="trend"></canvas></div></div>
+      <div class="card"><h2>Category Sales</h2><p>Click a bar to filter</p><div class="cv"><canvas id="cat"></canvas></div></div>
+      <div class="card"><h2>Sales by Region</h2><p id="regNote">Share of the selected view</p><div class="cv"><canvas id="reg"></canvas></div></div>
+    </div>
+  </main>
+
+  <aside class="detail" id="detail" aria-live="polite"></aside>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const months = ['Jan','Feb','Mar','Apr','May','Jun'];
+const full = ['January','February','March','April','May','June'];
+const sales = [12000,15000,18000,22000,20000,25000];
+/* category and region shares of every month's sales (50/30/20 and 40/25/20/15) */
+const share = {Produce:.5, Beverages:.3, Packaged:.2};
+const regions = {North:.4, South:.25, East:.2, West:.15};
+const cats = ['All', ...Object.keys(share)];
+const usd = n => '$' + Math.round(n).toLocaleString();
+const sum = a => a.reduce((x,y) => x+y, 0);
+let cat = 'All', sel = 5;
+const mult = () => cat === 'All' ? 1 : share[cat];
+const series = () => sales.map(v => v * mult());
+
+/* chips */
+$('#chips').innerHTML = cats.map(c => `<button class="chip" data-c="${c}" aria-pressed="false">${c}</button>`).join('');
+$('#chips').onclick = e => { const b = e.target.closest('.chip'); if(b) setCat(b.dataset.c); };
+
+/* charts */
+Chart.defaults.font.family = "'Figtree',system-ui,sans-serif";
+Chart.defaults.color = '#5d7167';
+const G = '#14573a', L = '#a6ee6b';
+const grid = {color:'#e9eee9'};
+const axisUsd = {grid, border:{display:false}, ticks:{callback:v => '$' + (v/1000) + 'k'}};
+
+const trend = new Chart($('#trend'), {type:'line',
+  data:{labels:months, datasets:[{label:'Sales', data:series(), borderColor:G, backgroundColor:'rgba(166,238,107,.3)', fill:true, tension:.35,
+    pointRadius:c => c.dataIndex === sel ? 9 : 4, pointHoverRadius:9, pointBackgroundColor:c => c.dataIndex === sel ? L : '#fff', pointBorderColor:G, pointBorderWidth:2.5}]},
+  options:{maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:c => ' ' + usd(c.parsed.y)}}},
+    scales:{y:{...axisUsd, beginAtZero:true}, x:{grid:{display:false}}},
+    onClick:(e,els) => { if(els.length) setMonth(els[0].index); },
+    onHover:(e,els) => e.native.target.style.cursor = els.length ? 'pointer' : 'default'}});
+
+const catChart = new Chart($('#cat'), {type:'bar',
+  data:{labels:Object.keys(share), datasets:[{data:[], borderRadius:10, backgroundColor:[]}]},
+  options:{maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:c => ' ' + usd(c.parsed.y)}}},
+    scales:{y:{...axisUsd, beginAtZero:true}, x:{grid:{display:false}}},
+    onClick:(e,els) => { if(els.length) setCat(Object.keys(share)[els[0].index]); },
+    onHover:(e,els) => e.native.target.style.cursor = els.length ? 'pointer' : 'default'}});
+
+const regChart = new Chart($('#reg'), {type:'doughnut',
+  data:{labels:Object.keys(regions), datasets:[{data:[], backgroundColor:['#a6ee6b','#4caf50','#14573a','#0c3b29'], borderWidth:3, borderColor:'#fff', hoverOffset:8}]},
+  options:{maintainAspectRatio:false, cutout:'58%', plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c => ` ${c.label}: ${usd(c.parsed)}`}}}}});
+
+/* count-up for numbers */
+function tween(el, to, fmt = usd){
+  const from = +el.dataset.v || 0, t0 = performance.now(), d = 600;
+  el.dataset.v = to;
+  (function f(n){ const k = Math.min(1,(n-t0)/d), e = 1-Math.pow(1-k,3); el.textContent = fmt(from+(to-from)*e); if(k<1) requestAnimationFrame(f); })(t0);
+}
+
+function render(){
+  const s = series(), total = sum(s), bi = s.indexOf(Math.max(...s));
+
+  document.querySelectorAll('.chip').forEach(b => { const on = b.dataset.c === cat; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+
+  /* KPIs */
+  const k = [['Total sales', total, usd], ['Best month', s[bi], usd, months[bi]], ['Average per month', total/6, usd], ['Growth, Jan to Jun', (s[5]/s[0]-1)*100, v => '+' + Math.round(v) + '%']];
+  if(!$('#kpis').children.length)
+    $('#kpis').innerHTML = k.map((x,i) => `<div class="kpi"><small>${x[0]}</small><strong data-i="${i}">0</strong></div>`).join('');
+  k.forEach((x,i) => { const el = $(`[data-i="${i}"]`); tween(el, x[1], x[2]); el.previousElementSibling.textContent = x[3] ? `${x[0]} (${x[3]})` : x[0]; });
+
+  $('#insHead').textContent = '+' + Math.round((s[5]/s[0]-1)*100) + '% since January';
+  $('#insText').textContent = `${cat === 'All' ? 'Monthly sales' : cat + ' sales'} rose from ${usd(s[0])} to ${usd(s[5])}.`;
+  $('#trendNote').textContent = cat === 'All' ? 'All categories' : cat;
+  $('#regNote').textContent = (cat === 'All' ? 'All categories' : cat) + ', January to June';
+
+  /* charts */
+  trend.data.datasets[0].data = s; trend.update();
+  catChart.data.datasets[0].data = Object.values(share).map(p => sum(sales) * p);
+  catChart.data.datasets[0].backgroundColor = Object.keys(share).map(c => cat === 'All' || cat === c ? G : '#c9dccf');
+  catChart.update();
+  regChart.data.datasets[0].data = Object.values(regions).map(p => total * p); regChart.update();
+
+  renderDetail(s);
+}
+
+function renderDetail(s){
+  const v = s[sel], prev = sel ? s[sel-1] : null, total = sum(s);
+  const d = prev ? (v/prev-1)*100 : null;
+  const bars = (obj, base) => Object.entries(obj).map(([n,p]) => `<div class="row"><span>${n}</span><span class="t"><i style="width:${p*100}%"></i></span><b>${usd(base*p)}</b></div>`).join('');
+  const monthAll = sales[sel];
+  $('#detail').innerHTML = `
+    <div class="hero flash">
+      <div class="m">${full[sel]}</div>
+      <div class="amt">${usd(v)}</div>
+      ${d === null ? '<span class="delta">First month</span>' : `<span class="delta ${d>=0?'up':'down'}">${d>=0?'▲':'▼'} ${Math.abs(d).toFixed(1)}% vs ${months[sel-1]}</span>`}
+    </div>
+    <div class="flash"><h3>Share of six-month sales</h3>
+      <div class="row"><span>${months[sel]}</span><span class="t"><i style="width:${v/total*100*3}%"></i></span><b>${(v/total*100).toFixed(1)}%</b></div></div>
+    <div class="flash"><h3>By category</h3>${bars(share, monthAll)}</div>
+    <div class="flash"><h3>By region</h3>${bars(regions, v)}</div>
+    <a class="go" href="profit.html">See ${months[sel]} profit</a>`;
+}
+
+function setCat(c){ cat = c; render(); }
+function setMonth(i){ sel = i; trend.update(); renderDetail(series()); }
+
+/* search: a month name or category jumps straight to it */
+$('#q').addEventListener('input', e => {
+  const t = e.target.value.trim().toLowerCase(); if(t.length < 3) return;
+  const mi = full.findIndex(m => m.toLowerCase().startsWith(t));
+  const ci = cats.find(c => c.toLowerCase().startsWith(t));
+  if(mi > -1) setMonth(mi); else if(ci) setCat(ci);
+});
+
+render();
+</script>
 </body>
 </html>
