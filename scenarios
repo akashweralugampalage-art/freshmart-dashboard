@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scenario Planning | FreshMart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--ink:#10281f;--forest:#14573a;--deep:#0c3b29;--lime:#a6ee6b;--mint:#dff3e3;--side:#e9f4ec;--paper:#f5f7f2;--white:#fff;--muted:#5d7167;--line:#dfe7e0;--violet:#8e7cf0;
+ --display:'Fraunces',Georgia,serif;--body:'Figtree',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);padding:14px}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+.app{display:grid;grid-template-columns:220px minmax(0,1fr);max-width:1440px;margin:0 auto;background:var(--white);border-radius:28px;overflow:hidden;box-shadow:0 0 0 1px var(--line)}
+
+aside.side{background:var(--side);padding:24px 16px;display:flex;flex-direction:column;gap:22px}
+.logo{font-family:var(--display);font-weight:800;font-size:1.5rem;letter-spacing:-.02em;text-align:center}
+.me{text-align:center;font-size:.85rem;color:var(--muted)}
+.me .av{width:64px;height:64px;border-radius:50%;margin:0 auto 8px;display:grid;place-items:center;font-size:2rem;background:var(--lime);box-shadow:0 0 0 4px #fff}
+.me b{display:block;color:var(--ink);font-size:1rem}
+.side nav{display:flex;flex-direction:column;gap:4px}
+.side nav a{display:flex;gap:10px;align-items:center;padding:11px 14px;border-radius:14px;font-weight:600;font-size:.92rem;transition:background .2s,transform .2s}
+.side nav a:hover{background:#fff;transform:translateX(3px)}
+.side nav a.on{background:var(--forest);color:#fff}
+.side .back{margin-top:auto;color:var(--muted);font-size:.88rem;padding:8px 14px}
+
+main{padding:24px;background:var(--paper);min-width:0}
+
+/* hero */
+.hero{position:relative;border-radius:28px;background:linear-gradient(135deg,#1d6b45,var(--deep));color:#fff;padding:34px;overflow:hidden;margin-bottom:34px}
+.deco{position:absolute;border-radius:50%;background:var(--violet);opacity:.4;pointer-events:none}
+.hgrid{position:relative;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:30px;align-items:center}
+.pillk{display:inline-block;background:rgba(255,255,255,.14);padding:6px 14px;border-radius:99px;font-weight:600;font-size:.85rem;margin-bottom:14px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem,5vw,3.7rem);line-height:1;letter-spacing:-.03em;color:var(--lime)}
+.hero p{margin:14px 0 18px;opacity:.9;max-width:380px;line-height:1.5}
+.seg{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.seg button{padding:8px 18px;border-radius:99px;background:rgba(255,255,255,.14);font-weight:600;font-size:.9rem;transition:background .2s,color .2s}
+.seg button:hover{background:rgba(255,255,255,.28)}
+.seg button.on{background:var(--lime);color:var(--deep)}
+.wt small{opacity:.8}.wt strong{display:block;font-family:var(--display);font-size:2rem;color:var(--lime)}
+.cwrap{position:relative}
+.chartblob{background:#fff;color:var(--ink);padding:26px 34px;height:340px;border-radius:70px 150px 70px 150px;animation:morph 12s ease-in-out infinite alternate}
+@keyframes morph{to{border-radius:150px 70px 150px 70px}}
+.tiles{position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:26px}
+.tile{text-align:left;background:rgba(255,255,255,.1);border-radius:18px;padding:14px;border-top:4px solid var(--c);transition:background .2s,transform .2s}
+.tile:hover,.tile.on{background:rgba(255,255,255,.22);transform:translateY(-3px)}
+.tile span{font-size:1.4rem}.tile b{display:block;margin-top:4px}.tile small{opacity:.8}
+.tile em{display:block;font-style:normal;font-family:var(--display);font-weight:800;font-size:1.3rem;margin-top:4px}
+
+/* scenario sections */
+.scn{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:40px;align-items:center;background:#fff;border-radius:28px;padding:34px;margin-bottom:22px;box-shadow:0 0 0 1px var(--line);opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s,box-shadow .3s}
+.scn.in{opacity:1;transform:none}
+.scn:hover{box-shadow:0 0 0 2px var(--c),0 18px 40px rgba(20,87,58,.12)}
+.scn:nth-of-type(even) .vis{order:2}
+.vis{position:relative}
+.blob{background:var(--t);aspect-ratio:1/.95;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;border-radius:60% 40% 55% 45% / 50% 55% 45% 50%;animation:morph2 14s ease-in-out infinite alternate;padding:30px}
+@keyframes morph2{to{border-radius:42% 58% 40% 60% / 58% 42% 58% 42%}}
+.blob .em{font-size:3.6rem;animation:float 4s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-8px) rotate(-4deg)}}
+.blob small{color:var(--muted);font-weight:600}
+.blob .big{font-family:var(--display);font-weight:800;font-size:2.4rem;color:var(--c);letter-spacing:-.02em}
+.blob svg{width:78%;height:60px;overflow:visible}
+.blob svg .ln{fill:none;stroke:var(--c);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.blob svg .ar{fill:var(--c);opacity:.14}
+.badge{position:absolute;top:-8px;left:-8px;width:96px;height:96px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+.badge svg{position:absolute;inset:0;width:100%;height:100%;animation:spin 16s linear infinite}
+.badge b{font-size:1.3rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.eyebrow{display:inline-block;background:var(--t);color:var(--ink);font-weight:700;font-size:.82rem;padding:5px 14px;border-radius:99px;margin-bottom:10px}
+.scn h2{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,3vw,2.2rem);letter-spacing:-.02em;line-height:1.1}
+.scn .d{color:var(--muted);margin:10px 0 14px;line-height:1.5}
+.pts{list-style:none;padding:0;display:grid;gap:8px;margin-bottom:16px}
+.pts li{display:flex;gap:10px;align-items:center;font-size:.92rem}
+.pts li i{font-style:normal;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--t)}
+.res{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:16px}
+.res div{background:var(--paper);border-radius:14px;padding:10px 12px}
+.res small{color:var(--muted);font-size:.78rem}.res b{display:block;font-size:1.02rem;margin-top:2px}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:.85rem;margin-bottom:8px}
+.sl b{color:var(--c)}
+.sl input{grid-column:1/-1;width:100%;accent-color:var(--c)}
+.good{color:#1e8a4f}.bad{color:#c0392b}
+
+.cmp{background:#fff;border-radius:28px;padding:26px;box-shadow:0 0 0 1px var(--line);margin-bottom:12px}
+.cmp h2{font-family:var(--display);font-weight:800;font-size:1.6rem;margin-bottom:12px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.92rem;min-width:620px}
+th{text-align:left;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:2px solid var(--line)}
+td{padding:11px 10px;border-bottom:1px solid var(--line)}
+td:first-child{font-weight:700}td:first-child::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c);margin-right:8px}
+.note{color:var(--muted);font-size:.85rem;margin-top:12px;line-height:1.5}
+
+@media (max-width:1000px){.hgrid,.scn{grid-template-columns:1fr}.scn:nth-of-type(even) .vis{order:0}.vis{max-width:420px;margin:0 auto;width:100%}}
+@media (max-width:760px){
+ .app{grid-template-columns:1fr}
+ aside.side{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:14px}
+ .me,.side .back{display:none}.side nav{flex-direction:row;flex-wrap:wrap}.side nav a{padding:8px 12px}
+ .res{grid-template-columns:repeat(2,1fr)}.hero,.scn{padding:22px}.chartblob{padding:18px 20px;border-radius:50px 90px 50px 90px}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}.scn{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><path id="cp" d="M48,48 m-36,0 a36,36 0 1,1 72,0 a36,36 0 1,1 -72,0"/></defs></svg>
+<div class="app">
+  <aside class="side">
+    <a class="logo" href="index.html">FreshMart</a>
+    <div class="me"><div class="av">🥬</div>Welcome back!<b>Hi, FreshMart team</b></div>
+    <nav>
+      <a href="index.html">🏠 Home</a>
+      <a href="sales.html">📈 Sales Analysis</a>
+      <a href="profit.html">💰 Profit Analysis</a>
+      <a href="cost.html">🧾 Cost Analysis</a>
+      <a href="scenarios.html" class="on">🔮 Scenario Planning</a>
+    </nav>
+    <a class="back" href="index.html">← Back to overview</a>
+  </aside>
+
+  <main>
+    <section class="hero">
+      <div class="deco" style="width:190px;height:190px;left:-60px;top:-50px"></div>
+      <div class="deco" style="width:90px;height:90px;right:30%;bottom:80px;opacity:.3"></div>
+      <div class="hgrid">
+        <div>
+          <span class="pillk">Scenario planning · July to December</span>
+          <h1>A different kind of forecast</h1>
+          <p>Four ways the next six months could play out, built from your June results. Move the sliders to test your own assumptions.</p>
+          <div class="seg" id="seg" role="group" aria-label="Metric">
+            <button data-m="profit" class="on">Profit</button><button data-m="sales">Sales</button><button data-m="cost">Costs</button>
+          </div>
+          <div class="wt"><small>Probability-weighted profit, July to December</small><strong id="wt">$0</strong></div>
+        </div>
+        <div class="cwrap"><div class="chartblob"><canvas id="chart" aria-label="Scenario comparison chart" role="img"></canvas></div></div>
+      </div>
+      <div class="tiles" id="tiles"></div>
+    </section>
+
+    <div id="sections"></div>
+
+    <section class="cmp">
+      <h2>Side by side</h2>
+      <div class="tw"><table>
+        <thead><tr><th>Scenario</th><th>Likelihood</th><th>Sales</th><th>Costs</th><th>Profit</th><th>Margin</th><th>vs most likely</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table></div>
+      <p class="note">Totals cover July to December. The starting point is June: $25,000 in sales and $13,000 in costs. Growth rates, likelihoods and the wild card are illustrative assumptions for you to edit, not predictions.</p>
+    </section>
+  </main>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const ACT = {sales:[12000,15000,18000,22000,20000,25000], cost:[8000,9000,10000,12000,11000,13000], profit:[4000,6000,8000,10000,9500,12000]};
+const S0 = 25000, C0 = 13000;
+const usd = n => (n < 0 ? '-' : '') + '$' + Math.round(Math.abs(n)).toLocaleString();
+const sg = {k:'sg', label:'Monthly sales growth', min:-10, max:15, step:.5};
+const cg = {k:'cg', label:'Monthly cost growth', min:-5, max:10, step:.5};
+
+/* edit these to use your own assumptions (all values are percentages) */
+const SC = [
+ {id:'best', name:'Best case', em:'🚀', color:'#2e9e5b', tint:'#dff3e3', prob:20, tag:'Everything goes right',
+  desc:'Demand keeps building and supplier deals keep costs in check, so sales grow much faster than costs.',
+  pts:[['📈','New customers keep arriving'],['🤝','Supplier deals hold costs down'],['🚚','Same-day delivery wins repeat orders']],
+  params:[{...sg,v:8},{...cg,v:4}]},
+ {id:'likely', name:'Most likely', em:'🎯', color:'#14573a', tint:'#e9f4ec', prob:50, tag:'Steady growth, slower than before',
+  desc:'The fast growth of the first half cools off. Sales and costs both keep climbing at a calmer pace.',
+  pts:[['📊','Growth settles near 4% a month'],['🧮','Costs rise slightly slower than sales'],['🛒','Regular customers stay loyal']],
+  params:[{...sg,v:4},{...cg,v:3}]},
+ {id:'worst', name:'Worst case', em:'⛈️', color:'#ef6c00', tint:'#fde9d4', prob:20, tag:'Sales slip while costs climb',
+  desc:'A competitor moves in and prices rise. Sales shrink a little each month while costs keep creeping up.',
+  pts:[['🏷️','A rival undercuts our prices'],['🌾','Produce prices keep rising'],['📉','Margins get squeezed']],
+  params:[{...sg,v:-3},{...cg,v:5}]},
+ {id:'wild', name:'Wild card', em:'🃏', color:'#7b68e8', tint:'#e6e2fb', prob:10, tag:'A viral moment, then a supply shock',
+  desc:'A recipe video goes viral and September demand spikes. The surge strains suppliers, and costs step up for good.',
+  pts:[['🎬','A viral video drives a one-month spike'],['🚛','Suppliers charge more to keep up'],['🔁','Demand returns to normal after']],
+  params:[{...sg,v:3},{...cg,v:2},{k:'sp',label:'One-off demand spike in September',min:0,max:60,step:5,v:30},{k:'cp',label:'Permanent cost jump from September',min:0,max:30,step:1,v:15}]}
+];
+const V = {}; SC.forEach(s => V[s.id] = Object.fromEntries(s.params.map(p => [p.k, p.v])));
+
+function run(id){
+  const v = V[id]; let s = S0, c = C0; const sales = [], cost = [];
+  for(let i = 0; i < 6; i++){
+    s *= 1 + v.sg/100; c *= 1 + v.cg/100;
+    let sv = s;
+    if(v.sp !== undefined && i === 2){ sv = s*(1 + v.sp/100); c *= 1 + v.cp/100; }
+    sales.push(sv); cost.push(c);
+  }
+  return {sales, cost, profit:sales.map((x,i) => x - cost[i])};
+}
+const sum = a => a.reduce((x,y) => x+y, 0);
+
+/* build the page */
+const hex = (h,a) => { const n = parseInt(h.slice(1),16); return `rgba(${n>>16},${n>>8&255},${n&255},${a})`; };
+$('#tiles').innerHTML = SC.map(s => `<button class="tile" data-id="${s.id}" style="--c:${s.color}"><span>${s.em}</span><b>${s.name}</b><em id="tp-${s.id}">$0</em><small>${s.prob}% likely</small></button>`).join('');
+
+const badgeText = n => (n.toUpperCase() + ' • ').repeat(3);
+$('#sections').innerHTML = SC.map(s => `
+ <section class="scn" id="${s.id}" style="--c:${s.color};--t:${s.tint}">
+  <div class="vis">
+    <div class="blob"><span class="em">${s.em}</span><small>Profit, July to December</small><span class="big" id="big-${s.id}">$0</span>
+      <svg viewBox="0 0 200 60" preserveAspectRatio="none"><path class="ar" id="ar-${s.id}"/><path class="ln" id="ln-${s.id}"/></svg></div>
+    <div class="badge"><svg viewBox="0 0 96 96"><text font-size="9.5" font-weight="700" fill="#fff" textLength="224" lengthAdjust="spacing"><textPath href="#cp">${badgeText(s.name)}</textPath></text></svg><b>↗</b></div>
+  </div>
+  <div>
+    <span class="eyebrow">${s.name} · ${s.prob}% likely</span>
+    <h2>${s.tag}</h2><p class="d">${s.desc}</p>
+    <ul class="pts">${s.pts.map(p => `<li><i>${p[0]}</i>${p[1]}</li>`).join('')}</ul>
+    <div class="res"><div><small>Sales</small><b id="rs-${s.id}"></b></div><div><small>Costs</small><b id="rc-${s.id}"></b></div><div><small>Profit</small><b id="rp-${s.id}"></b></div><div><small>Margin</small><b id="rm-${s.id}"></b></div></div>
+    ${s.params.map(p => `<label class="sl"><span>${p.label}</span><b id="o-${s.id}-${p.k}"></b><input type="range" data-id="${s.id}" data-k="${p.k}" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.v}"></label>`).join('')}
+  </div>
+ </section>`).join('');
+$('#tbody').innerHTML = SC.map(s => `<tr style="--c:${s.color}"><td>${s.name}</td><td>${s.prob}%</td><td id="ts-${s.id}"></td><td id="tc-${s.id}"></td><td id="tp2-${s.id}"></td><td id="tm-${s.id}"></td><td id="td-${s.id}"></td></tr>`).join('');
+
+/* chart */
+Chart.defaults.font.family = "'Figtree',system-ui,sans-serif"; Chart.defaults.color = '#5d7167';
+let metric = 'profit', sticky = null, hover = null;
+const chart = new Chart($('#chart'), {type:'line',
+  data:{labels:months, datasets:[
+    {label:'Actual', data:[], borderColor:'#10281f', backgroundColor:'#10281f', borderWidth:3.5, tension:.3, pointRadius:3},
+    ...SC.map(s => ({label:s.name, data:[], borderColor:s.color, backgroundColor:s.color, borderDash:[7,5], borderWidth:3, tension:.3, pointRadius:3, spanGaps:false}))]},
+  options:{maintainAspectRatio:false, interaction:{mode:'index', intersect:false},
+    plugins:{legend:{position:'bottom', labels:{boxWidth:12, usePointStyle:true}}, tooltip:{callbacks:{label:c => c.parsed.y === null ? '' : ` ${c.dataset.label}: ${usd(c.parsed.y)}`}}},
+    scales:{y:{beginAtZero:true, border:{display:false}, grid:{color:'#e9eee9'}, ticks:{callback:v => '$' + v/1000 + 'k'}}, x:{grid:{display:false}}}}});
+
+function tween(id, to, fmt = usd){
+  const el = document.getElementById(id); if(!el) return;
+  const from = +el.dataset.v || 0, t0 = performance.now(); el.dataset.v = to; cancelAnimationFrame(el._r);
+  (function f(n){ const k = Math.min(1,(n-t0)/450), e = 1-Math.pow(1-k,3); el.textContent = fmt(from+(to-from)*e); if(k<1) el._r = requestAnimationFrame(f); })(t0);
+}
+const pct = n => n.toFixed(1) + '%';
+const focusId = () => hover || sticky;
+
+function paintChart(){
+  const f = focusId();
+  chart.data.datasets[0].data = ACT[metric].concat(Array(6).fill(null));
+  SC.forEach((s,i) => {
+    const r = run(s.id), d = chart.data.datasets[i+1];
+    d.data = Array(5).fill(null).concat([ACT[metric][5]], r[metric]);
+    const dim = f && f !== s.id;
+    d.borderColor = d.backgroundColor = dim ? hex(s.color,.2) : s.color;
+    d.borderWidth = f === s.id ? 5 : 3;
+  });
+  chart.update('none');
+}
+
+function update(){
+  let wt = 0, base = null;
+  const R = {}; SC.forEach(s => R[s.id] = run(s.id));
+  const likelyProfit = sum(R.likely.profit);
+  SC.forEach(s => {
+    const r = R[s.id], ts = sum(r.sales), tc = sum(r.cost), tp = ts - tc, mg = tp/ts*100, dl = tp - likelyProfit;
+    wt += s.prob/100*tp;
+    tween('tp-'+s.id, tp); tween('big-'+s.id, tp);
+    tween('rs-'+s.id, ts); tween('rc-'+s.id, tc); tween('rp-'+s.id, tp); tween('rm-'+s.id, mg, pct);
+    tween('ts-'+s.id, ts); tween('tc-'+s.id, tc); tween('tp2-'+s.id, tp); tween('tm-'+s.id, mg, pct);
+    const de = document.getElementById('td-'+s.id);
+    de.textContent = s.id === 'likely' ? 'Baseline' : (dl >= 0 ? '+' : '') + usd(dl);
+    de.className = s.id === 'likely' ? '' : dl >= 0 ? 'good' : 'bad';
+    s.params.forEach(p => { const o = document.getElementById(`o-${s.id}-${p.k}`); o.textContent = (V[s.id][p.k] > 0 ? '+' : '') + V[s.id][p.k] + '%'; });
+    /* sparkline: June actual then six projected months */
+    const pts = [12000].concat(r.profit), mx = Math.max(...pts), mn = Math.min(...pts), rg = (mx-mn) || 1;
+    const xy = pts.map((v,i) => [i*200/6, 54 - (v-mn)/rg*48]);
+    const ln = xy.map((p,i) => (i?'L':'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+    document.getElementById('ln-'+s.id).setAttribute('d', ln);
+    document.getElementById('ar-'+s.id).setAttribute('d', ln + ' L200 60 L0 60 Z');
+  });
+  tween('wt', wt);
+  paintChart();
+}
+
+/* interactions */
+document.addEventListener('input', e => {
+  if(!e.target.matches('input[type=range]')) return;
+  V[e.target.dataset.id][e.target.dataset.k] = +e.target.value; update();
+});
+$('#seg').onclick = e => {
+  const b = e.target.closest('button'); if(!b) return;
+  metric = b.dataset.m; [...$('#seg').children].forEach(x => x.classList.toggle('on', x === b)); paintChart();
+};
+$('#tiles').onclick = e => {
+  const t = e.target.closest('.tile'); if(!t) return;
+  const id = t.dataset.id; sticky = sticky === id ? null : id;
+  document.querySelectorAll('.tile').forEach(x => x.classList.toggle('on', x.dataset.id === sticky));
+  paintChart();
+  if(sticky) document.getElementById(id).scrollIntoView({behavior:'smooth', block:'center'});
+};
+document.querySelectorAll('.scn').forEach(sec => {
+  sec.addEventListener('mouseenter', () => { hover = sec.id; paintChart(); });
+  sec.addEventListener('mouseleave', () => { hover = null; paintChart(); });
+});
+const io = new IntersectionObserver(es => es.forEach(en => { if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } }), {threshold:.12});
+document.querySelectorAll('.scn').forEach(s => io.observe(s));
+
+update();
+</script>
+</body>
+</html>
